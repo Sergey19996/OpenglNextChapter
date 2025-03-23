@@ -1,0 +1,8 @@
+﻿  main.cpp
+D:\C++\Learning\WebOpenglPractice\src\main.cpp(177,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\main.cpp(181,27): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\main.cpp(187,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+D:\C++\Learning\WebOpenglPractice\src\main.cpp(187,16): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+  WebOpenglPractice.vcxproj -> D:\C++\Learning\WebOpenglPractice\x64\Debug\WebOpenglPractice.exe
+  "pwsh.exe" не является внутренней или внешней
+  командой, исполняемой программой или пакетным файлом.
