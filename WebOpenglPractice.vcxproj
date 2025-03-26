@@ -131,15 +131,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\models\BrickObject.cpp" />
+    <ClCompile Include="src\graphics\models\GameObject.cpp" />
+    <ClCompile Include="src\graphics\ResourceManager.cpp" />
+    <ClCompile Include="src\graphics\SpriteRenderer.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\graphics\rendering\Shader.cpp" />
+    <ClCompile Include="src\graphics\rendering\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\fragmentShader.glsl" />
     <None Include="Assets\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\graphics\Level\GameLevel.h" />
+    <ClInclude Include="src\graphics\models\BrickObject.h" />
+    <ClInclude Include="src\graphics\models\GameObject.h" />
+    <ClInclude Include="src\graphics\rendering\Shader.h" />
+    <ClInclude Include="src\graphics\rendering\Texture.h" />
+    <ClInclude Include="src\graphics\ResourceManager.h" />
+    <ClInclude Include="src\graphics\SpriteRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

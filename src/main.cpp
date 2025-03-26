@@ -9,12 +9,41 @@
 #include <fstream>  // for reading shaders
 #include <sstream>  // for reading shaders
 
-#include "Shader.h"
+#include "graphics/rendering/Shader.h"
+#include "graphics/rendering/Texture.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include "graphics/SpriteRenderer.h"
+#include "graphics/ResourceManager.h"
+
+#include "graphics/models/BrickObject.h"
+#include <vector>
+#include <random>
+
+#define SCREENWIDTH 800
+#define SCREENHEIGHT 608
+
+#define SQUERE_X  384
+#define SQUERE_Y  256
+
+const int  BRICK_SIZE = 32;
 
 
-#define WIDTH 800
-#define HEIGHT 600
+std::vector<BrickObject> bricks;
 
+
+
+void initBricks(Texture* texture);
+
+
+enum Direction
+{
+	NORTH = 0,
+	WESST = 1,
+	SOUTH = 2,
+	IEAST = 3
+};
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -40,7 +69,7 @@ int main(int m) {
 
 	// glfw window creation
 	// --------------------
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "FUCK", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCREENWIDTH, SCREENHEIGHT, "FUCK", NULL, NULL);
 	if (window == NULL) {
 
 		std::cout << "FAILED to create GLFW window" << std::endl;
@@ -63,123 +92,47 @@ int main(int m) {
 	
 
 
-	//  SHADERS START
-	Shader shader("Assets/shaders/vertexShader.glsl", "Assets/shaders/fragmentShader.glsl");
+	ResourceManager::LoadShader("Assets/shaders/vertexShader.glsl", "Assets/shaders/fragmentShader.glsl", nullptr, "sprite");
+	ResourceManager::LoadTexture("Assets/textures/Plates_Clear.png", true, "plates");
+	ResourceManager::GetShader("sprite").use().setInt("texture0", 0);
+	SpriteRenderer renderer(ResourceManager::GetShader("sprite"), ResourceManager::GetTexture("plates").Width, ResourceManager::GetTexture("plates").Height,128);  // инициализирутс€ после текстуры и шейдера 
 
-
-	//Texture one Start
-	
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	//set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//load and generate the texture
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("Assets/textures/dungeonMap.jpg", &width, &height, &nrChannels, 0);
-	if (data) {
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);  //создаЄт текстуру по ширине и высоте
-	glGenerateMipmap(GL_TEXTURE_2D); // когда текстура очень далеко/маленька€, дл€ семплировани€(оптимизаци€)
-
-	}
-	else
-	{
-		std::cout << "ERROR::TEXTURE:failed to load" << std::endl;
-	}
-
-	stbi_image_free(data);
-
-
-	unsigned int texture1;
-	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	data = stbi_load("Assets/textures/Plates.png", &width, &height, &nrChannels, 0);
-	if (data) {
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);  //создаЄт текстуру по ширине и высоте
-		glGenerateMipmap(GL_TEXTURE_2D); // когда текстура очень далеко/маленька€, дл€ семплировани€(оптимизаци€)
-
-
-	
-
-
-
-	}
-	else
-	{
-		std::cout << "ERROR::TEXTURE:failed to load" << std::endl;
-	}
-
-	stbi_image_free(data);
-
-	 x = 0, y = 0;
-	 wh = 128;
-
-	 u1 = x / width;
-	 v1 = y / height;
-	 u2 = (x + wh) / width;
-	 v2 = (y + wh) / height;
-
-
-	////  VAO/VBO
-	float vertices[] = {
-		// first triangle      COLORS          UV
-   0.5f,  0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	u2,v1,		 // top right    0
-   0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,	u2,v2,			// bottom right 1
-  -0.5f,  0.5f, 0.0f,	0.0f, 0.0f, 1.0f,	u1,v1,			// top left     2
-  // second triangle
-  -0.5f, -0.5f, 0.0f,	1.0f, 1.0f, 1.0f,	u1,v2,			// bottom left  3
-	};
-	unsigned int indices[] = {
-		0,3,2,
-		1,3,0
-	};
-
-
-
-	unsigned int VAO, VBO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-	// 1. bind Vertex Array Object
-	glBindVertexArray(VAO);
-	
-	
-	// // 2. copy our vertices array in a buffer for OpenGL to use
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);  
-	// 3. copy our index array in a element buffer for OpenGL to use
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// 3. then set our vertex attributes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // layout = 0  // говорим как читать данные с VBO
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // layout = 0  // говорим как читать данные с VBO
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // layout = 0  // говорим как читать данные с VBO
-	glEnableVertexAttribArray(2);
-	// –азбиндивание VAO (необ€зательно, но хороша€ практика)
-	glBindVertexArray(0);
-	//
-	shader.use();
-	shader.setInt("texture1", 0);
-	shader.setInt("texture2", 1);
+	initBricks(&ResourceManager::GetTexture("plates"));
 		
 	float timeValue = glfwGetTime(); // ѕолучаем начальное врем€
+
+	const float animClamp = 0.2f;
+	float timer = 0.0f;
+
+	glm::mat4 ortoMatrix = glm::ortho(0.0f, static_cast<float>(SCREENWIDTH), static_cast<float>(SCREENHEIGHT),0.0f, -1.0f, 1.0f);
+
+	ResourceManager::GetShader("sprite").setMat4("projection", ortoMatrix);
+
+	
 
 	while (!glfwWindowShouldClose(window)){
 		float LastTime = timeValue;  // —охран€ем предыдущее врем€
 		 timeValue = glfwGetTime(); // ѕолучаем текущее врем€
 		float felapsedTime = timeValue - LastTime;
+		timer += felapsedTime;
+
+
+		//
+		/*if (timer > animClamp) {
+
+			timer -= timer;
+			if (x < 512.0f - 128.0f) {
+				x += 128.0f;
+
+			}
+			else
+			{
+				x = 0;
+			}
+
+		}*/
+		//
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -187,27 +140,20 @@ int main(int m) {
 		glClearColor(0.2, 0.3, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		shader.use();
+		ResourceManager::GetShader("sprite").use();
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		std::cout << x <<"\t" << y << std::endl;
-		shader.setFloat("x_offset", x/512);
-		shader.setFloat("y_offset", y/512);
-		shader.setFloat("timeValue", timeValue);
-		//int timeValueLocation = glGetUniformLocation(shaderProgram, "timeValue");
-		//glUniform1f(timeValueLocation, timeValue);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-
-		glBindVertexArray(VAO);
+		ResourceManager::GetShader("sprite").setFloat("x_offset", x/512);
+		ResourceManager::GetShader("sprite").setFloat("y_offset", y/512);
+		ResourceManager::GetShader("sprite").setFloat("timeValue", timeValue);
 		
+
+		
+		for (BrickObject& brick : bricks) {
+			ResourceManager::GetShader("sprite").setInt("tileIndex", brick.TextureIdx);
+			brick.Draw(renderer);
+		};
 	
-
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,0);  // 6 indices
-		glBindVertexArray(0);
-
-		
 
 	}
 	glfwTerminate();
@@ -275,4 +221,31 @@ void processInput(GLFWwindow* window) {
 		}
 
 	}
+}
+
+void initBricks(Texture* texture) {
+
+
+	int line = SQUERE_Y / BRICK_SIZE;
+	int row = SQUERE_X / BRICK_SIZE;
+
+	unsigned int offsetX = SCREENWIDTH / 2 - SQUERE_X / 2;
+	unsigned int offsetY = SCREENHEIGHT / 2 - SQUERE_Y / 2;
+
+	//unsigned int SQUERE_CenterX = SQUERE_X / 2;
+	//unsigned int SQUERE_CenterY = SQUERE_Y / 2;
+
+
+	for (unsigned int i = 0; i < row; i++)
+	{
+		for (unsigned int k = 0; k < line; k++)
+		{
+			int idx = rand() % 15;
+			float rotate = rand() % 4;
+			bricks.push_back(BrickObject(glm::vec2(i * BRICK_SIZE + offsetX, k * BRICK_SIZE + offsetY), glm::vec2(BRICK_SIZE, BRICK_SIZE), rotate, texture, idx));
+		}
+	}
+
+
+
 }
