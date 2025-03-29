@@ -1,0 +1,2 @@
+D:\C++\Learning\WebOpenglPractice\x64\Release\glfw3.dll
+D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Release\WebOpeng.C92053A7.Up2Date

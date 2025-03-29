@@ -14,7 +14,8 @@ uniform mat4 projection;
 
 //for bricks
 uniform int tileIndex;
-int tiles_per_row = 512 / 128;  // 4 тайла на строку
+int TextureSize = 1024;
+int tiles_per_row = TextureSize / 128;  // 4 тайла на строку
 
 void main(){
 
@@ -30,8 +31,8 @@ int y = tileIndex / tiles_per_row; //колонка  (номер по Y)
 float pxlX = x * 128.0;
 float pxlY = y * 128.0;
 
-float uvX = float(pxlX) / 512.0;
-float uvY = float(pxlY) / 512.0;
+float uvX = float(pxlX) / TextureSize;
+float uvY = float(pxlY) / TextureSize;
 //
     TexCoord = vec2(vertex.z + uvX,vertex.w + uvY);
     fragPos = vec3(vertex.xy,1.0);

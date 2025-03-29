@@ -1,3 +1,6 @@
-﻿  WebOpenglPractice.vcxproj -> D:\C++\Learning\WebOpenglPractice\x64\Debug\WebOpenglPractice.exe
+﻿  GameLevel.cpp
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(49,29): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(51,30): warning C4018: '<': signed/unsigned mismatch
+  WebOpenglPractice.vcxproj -> D:\C++\Learning\WebOpenglPractice\x64\Debug\WebOpenglPractice.exe
   "pwsh.exe" не является внутренней или внешней
   командой, исполняемой программой или пакетным файлом.

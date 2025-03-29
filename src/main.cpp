@@ -16,6 +16,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "graphics/SpriteRenderer.h"
 #include "graphics/ResourceManager.h"
+#include "graphics/Level/GameLevel.h"
 
 #include "graphics/models/BrickObject.h"
 #include <vector>
@@ -24,26 +25,17 @@
 #define SCREENWIDTH 800
 #define SCREENHEIGHT 608
 
-#define SQUERE_X  384
-#define SQUERE_Y  256
-
-const int  BRICK_SIZE = 32;
 
 
-std::vector<BrickObject> bricks;
+
+
+
 
 
 
 void initBricks(Texture* texture);
 
 
-enum Direction
-{
-	NORTH = 0,
-	WESST = 1,
-	SOUTH = 2,
-	IEAST = 3
-};
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -96,8 +88,9 @@ int main(int m) {
 	ResourceManager::LoadTexture("Assets/textures/Plates_Clear.png", true, "plates");
 	ResourceManager::GetShader("sprite").use().setInt("texture0", 0);
 	SpriteRenderer renderer(ResourceManager::GetShader("sprite"), ResourceManager::GetTexture("plates").Width, ResourceManager::GetTexture("plates").Height,128);  // инициализирутся после текстуры и шейдера 
+	GameLevel Level;
+	Level.Generate(SCREENWIDTH, SCREENHEIGHT, &ResourceManager::GetTexture("plates"));
 
-	initBricks(&ResourceManager::GetTexture("plates"));
 		
 	float timeValue = glfwGetTime(); // Получаем начальное время
 
@@ -142,17 +135,14 @@ int main(int m) {
 
 		ResourceManager::GetShader("sprite").use();
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		std::cout << x <<"\t" << y << std::endl;
+		//std::cout << x <<"\t" << y << std::endl;
 		ResourceManager::GetShader("sprite").setFloat("x_offset", x/512);
 		ResourceManager::GetShader("sprite").setFloat("y_offset", y/512);
 		ResourceManager::GetShader("sprite").setFloat("timeValue", timeValue);
 		
 
+		Level.Draw(renderer);
 		
-		for (BrickObject& brick : bricks) {
-			ResourceManager::GetShader("sprite").setInt("tileIndex", brick.TextureIdx);
-			brick.Draw(renderer);
-		};
 	
 
 	}
@@ -221,31 +211,4 @@ void processInput(GLFWwindow* window) {
 		}
 
 	}
-}
-
-void initBricks(Texture* texture) {
-
-
-	int line = SQUERE_Y / BRICK_SIZE;
-	int row = SQUERE_X / BRICK_SIZE;
-
-	unsigned int offsetX = SCREENWIDTH / 2 - SQUERE_X / 2;
-	unsigned int offsetY = SCREENHEIGHT / 2 - SQUERE_Y / 2;
-
-	//unsigned int SQUERE_CenterX = SQUERE_X / 2;
-	//unsigned int SQUERE_CenterY = SQUERE_Y / 2;
-
-
-	for (unsigned int i = 0; i < row; i++)
-	{
-		for (unsigned int k = 0; k < line; k++)
-		{
-			int idx = rand() % 15;
-			float rotate = rand() % 4;
-			bricks.push_back(BrickObject(glm::vec2(i * BRICK_SIZE + offsetX, k * BRICK_SIZE + offsetY), glm::vec2(BRICK_SIZE, BRICK_SIZE), rotate, texture, idx));
-		}
-	}
-
-
-
 }

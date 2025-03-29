@@ -11,9 +11,10 @@ public:
 	float rotate;
 
 	GameObject();
-	GameObject(glm::vec2 pos, glm::vec2 size, float angle,Texture* texture);
+	GameObject(glm::vec2 pos, glm::vec2 size, float angle,Texture* texture,unsigned int TextureIdx);
 
 	Texture* texture;
+	unsigned int TextureIdx;
 	virtual void Draw(SpriteRenderer& renderer);
 
 
