@@ -6,9 +6,6 @@ out float time;
 out vec2 TexCoord;
 uniform float timeValue;
 
-uniform float x_offset;
-uniform float y_offset;
-
 uniform mat4 model;
 uniform mat4 projection;
 

@@ -8,17 +8,11 @@
 #include <string>   // for reading shaders
 #include <fstream>  // for reading shaders
 #include <sstream>  // for reading shaders
-
-#include "graphics/rendering/Shader.h"
-#include "graphics/rendering/Texture.h"
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "graphics/SpriteRenderer.h"
-#include "graphics/ResourceManager.h"
-#include "graphics/Level/GameLevel.h"
+#include "Game.h"
 
-#include "graphics/models/BrickObject.h"
+
 #include <vector>
 #include <random>
 
@@ -27,28 +21,47 @@
 
 
 
+Game BlocksDestroyer(SCREENWIDTH,SCREENHEIGHT);
 
 
 
 
 
-
-void initBricks(Texture* texture);
 
 
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
-float x = 128, y = 128;
-float wh = 128;
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
-float u1 = 0;
-float v1 = 0;
-float u2 = 0;
-float v2 = 0;
 
-void UpdateUVData(unsigned int VAO, unsigned int VBO, float* vertices);
+
+
+
+
+void keyChanged(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+	switch (action)
+	{
+	case GLFW_RELEASE:
+		std::cout << "Release code" << key << std::endl;
+		break;
+	case GLFW_PRESS:
+		std::cout << "Press code" << key << std::endl;
+		break;
+	case GLFW_REPEAT:
+		std::cout << "Repeat code" << key << std::endl;
+		break;
+
+	};
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+
+	BlocksDestroyer.sceneEvent();
+}
+
 
 int main(int m) {
 	glfwInit();
@@ -70,7 +83,7 @@ int main(int m) {
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetKeyCallback(window, (GLFWkeyfun)processInput);
+	glfwSetKeyCallback(window, Game::keyCallback);
 
 
 	// glad: load all OpenGL function pointers
@@ -84,12 +97,9 @@ int main(int m) {
 	
 
 
-	ResourceManager::LoadShader("Assets/shaders/vertexShader.glsl", "Assets/shaders/fragmentShader.glsl", nullptr, "sprite");
-	ResourceManager::LoadTexture("Assets/textures/Plates_Clear.png", true, "plates");
-	ResourceManager::GetShader("sprite").use().setInt("texture0", 0);
-	SpriteRenderer renderer(ResourceManager::GetShader("sprite"), ResourceManager::GetTexture("plates").Width, ResourceManager::GetTexture("plates").Height,128);  // инициализирутся после текстуры и шейдера 
-	GameLevel Level;
-	Level.Generate(SCREENWIDTH, SCREENHEIGHT, &ResourceManager::GetTexture("plates"));
+	 BlocksDestroyer.Init();
+
+	
 
 		
 	float timeValue = glfwGetTime(); // Получаем начальное время
@@ -97,11 +107,8 @@ int main(int m) {
 	const float animClamp = 0.2f;
 	float timer = 0.0f;
 
-	glm::mat4 ortoMatrix = glm::ortho(0.0f, static_cast<float>(SCREENWIDTH), static_cast<float>(SCREENHEIGHT),0.0f, -1.0f, 1.0f);
-
-	ResourceManager::GetShader("sprite").setMat4("projection", ortoMatrix);
-
 	
+	Game::keyCallbacks.push_back(keyChanged);
 
 	while (!glfwWindowShouldClose(window)){
 		float LastTime = timeValue;  // Сохраняем предыдущее время
@@ -133,16 +140,11 @@ int main(int m) {
 		glClearColor(0.2, 0.3, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		ResourceManager::GetShader("sprite").use();
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		//std::cout << x <<"\t" << y << std::endl;
-		ResourceManager::GetShader("sprite").setFloat("x_offset", x/512);
-		ResourceManager::GetShader("sprite").setFloat("y_offset", y/512);
-		ResourceManager::GetShader("sprite").setFloat("timeValue", timeValue);
 		
 
-		Level.Draw(renderer);
-		
+		BlocksDestroyer.Render();
+
+	
 	
 
 	}
@@ -158,12 +160,14 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
 
 }
-void processInput(GLFWwindow* window) {
+void key_callback(GLFWwindow* window,int key, int scancode, int action, int mode) {
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	
+
+	/*if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		if (y <= 0.0f) {
 		y = 512.0f-128.0f;
@@ -210,5 +214,5 @@ void processInput(GLFWwindow* window) {
 			x = 512.0f-128.0f;
 		}
 
-	}
+	}*/
 }

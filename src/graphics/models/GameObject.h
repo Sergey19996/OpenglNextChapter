@@ -15,6 +15,9 @@ public:
 
 	Texture* texture;
 	unsigned int TextureIdx;
+
+
+
 	virtual void Draw(SpriteRenderer& renderer);
 
 

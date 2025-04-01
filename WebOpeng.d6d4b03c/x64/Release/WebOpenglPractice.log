@@ -1,7 +1,8 @@
-﻿  indicesGenerator.cpp
-D:\C++\Learning\WebOpenglPractice\src\graphics\algorithms\indicesGenerator.cpp(10,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+﻿  GameLevel.cpp
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(50,29): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(52,30): warning C4018: '<': signed/unsigned mismatch
   Generating code
-  5 of 897 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
+  8 of 878 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     7 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

@@ -16,6 +16,7 @@ GameLevel::~GameLevel()
 
 void GameLevel::Generate(const unsigned int& SCREENWIDTH, const unsigned int& SCREENHEIGHT,Texture* texture) //этап когда мы уже генерируем числа в массив и отправляем на инициализацию уровня
 {
+	Bricks.clear();
 
 	int line = SQUERE_Y / BRICK_SIZE;
 	int row = SQUERE_X / BRICK_SIZE;
@@ -23,7 +24,7 @@ void GameLevel::Generate(const unsigned int& SCREENWIDTH, const unsigned int& SC
 	//std::vector <uint8_t>& indices = Generator->AlgorithmBasicGround(line, row);
 
 		//init(SCREENWIDTH, SCREENHEIGHT, Generator->AlgorithmBasicGround(line, row), row, line, texture);
-	init(SCREENWIDTH, SCREENHEIGHT, Generator->AlgorithmLakeGround(row, line,12), row, line, texture);
+	init(SCREENWIDTH, SCREENHEIGHT, Generator->AlgorithmLakeGround(row, line,5), row, line, texture);
 
 }
 

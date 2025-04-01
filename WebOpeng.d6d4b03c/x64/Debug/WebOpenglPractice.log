@@ -1,6 +1,11 @@
-﻿  GameLevel.cpp
-D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(49,29): warning C4018: '<': signed/unsigned mismatch
-D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(51,30): warning C4018: '<': signed/unsigned mismatch
+﻿  Game.cpp
+D:\C++\Learning\WebOpenglPractice\src\Game.cpp(93,73): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+D:\C++\Learning\WebOpenglPractice\src\main.cpp(105,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\main.cpp(115,27): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\main.cpp(140,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+D:\C++\Learning\WebOpenglPractice\src\main.cpp(140,16): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+  Generating Code...
   WebOpenglPractice.vcxproj -> D:\C++\Learning\WebOpenglPractice\x64\Debug\WebOpenglPractice.exe
   "pwsh.exe" не является внутренней или внешней
   командой, исполняемой программой или пакетным файлом.

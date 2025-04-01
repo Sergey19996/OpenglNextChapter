@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\graphics\algorithms\indicesGenerator.cpp" />
     <ClCompile Include="src\graphics\algorithms\WaterData.cpp" />
     <ClCompile Include="src\graphics\Level\GameLevel.cpp" />
@@ -147,10 +148,12 @@
     <None Include="Assets\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\graphics\algorithms\indicesGenerator.h" />
     <ClInclude Include="src\graphics\algorithms\WaterData.h" />
     <ClInclude Include="src\graphics\Level\GameLevel.h" />
     <ClInclude Include="src\graphics\models\BrickObject.h" />
+    <ClInclude Include="src\graphics\models\Character.h" />
     <ClInclude Include="src\graphics\models\GameObject.h" />
     <ClInclude Include="src\graphics\models\WaterObject.h" />
     <ClInclude Include="src\graphics\rendering\Shader.h" />

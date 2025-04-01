@@ -1,9 +1,9 @@
 #include "SpriteRenderer.h"
 
-SpriteRenderer::SpriteRenderer(Shader& shader,unsigned int widthX, unsigned int widthY,unsigned int cellSize)
+SpriteRenderer::SpriteRenderer(Shader& shader,unsigned int widthX, unsigned int height,unsigned int cellSize)
 {
 	this->shader = shader;
-	this->initRendererData(widthX,widthY,cellSize);
+	this->initRendererData(widthX,height,cellSize);
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -36,16 +36,16 @@ void SpriteRenderer::DrawSprite(Texture& texture, glm::vec2 position, glm::vec2 
 	glBindVertexArray(0);
 }
 
-void SpriteRenderer::initRendererData(unsigned int widthX, unsigned int widthY,unsigned int CellSize)
+void SpriteRenderer::initRendererData(unsigned int widthX, unsigned int height,unsigned int CellSize)
 {
 	float u1, v1, u2, v2, wh, x, y;
 
 	 x = 0, y = 0;
 	 wh = CellSize;
 	 u1 = x / widthX;
-	 v1 = y / widthY;
+	 v1 = y / height;
 	 u2 = (x + wh) / widthX;
-	 v2 = (y + wh) / widthY;
+	 v2 = (y + wh) / height;
 	 
 
 	////  VAO/VBO
