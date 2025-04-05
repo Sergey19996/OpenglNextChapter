@@ -8,13 +8,13 @@ public:
 
 	glm::vec2 pos;
 	glm::vec2 size;
+
 	float rotate;
 
 	GameObject();
-	GameObject(glm::vec2 pos, glm::vec2 size, float angle,Texture* texture,unsigned int TextureIdx);
+	GameObject(glm::vec2 pos, glm::vec2 size, float angle,Texture* texture);
 
 	Texture* texture;
-	unsigned int TextureIdx;
 
 
 

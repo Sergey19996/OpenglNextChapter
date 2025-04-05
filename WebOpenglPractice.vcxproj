@@ -136,6 +136,7 @@
     <ClCompile Include="src\graphics\algorithms\WaterData.cpp" />
     <ClCompile Include="src\graphics\Level\GameLevel.cpp" />
     <ClCompile Include="src\graphics\models\BrickObject.cpp" />
+    <ClCompile Include="src\graphics\models\Character.cpp" />
     <ClCompile Include="src\graphics\models\GameObject.cpp" />
     <ClCompile Include="src\graphics\ResourceManager.cpp" />
     <ClCompile Include="src\graphics\SpriteRenderer.cpp" />
@@ -150,7 +151,7 @@
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\graphics\algorithms\indicesGenerator.h" />
-    <ClInclude Include="src\graphics\algorithms\WaterData.h" />
+    <ClInclude Include="src\graphics\Direction.hpp" />
     <ClInclude Include="src\graphics\Level\GameLevel.h" />
     <ClInclude Include="src\graphics\models\BrickObject.h" />
     <ClInclude Include="src\graphics\models\Character.h" />

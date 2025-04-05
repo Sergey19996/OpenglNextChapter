@@ -10,7 +10,7 @@ public:
 	std::vector<GameObject> Bricks;
 	GameLevel();
 	~GameLevel();
-	void Generate(const unsigned int&  SCREENWIDTH,const  unsigned int& SCREENHEIGHT,Texture* texture);
+	void Generate(Texture* texture,const int& Brick_Size,const glm::vec2& offset, const glm::ivec2& Squere_Size);
 
 	void Draw(SpriteRenderer& reder);
 
@@ -18,10 +18,10 @@ public:
 
 
 private:
-	void init(const unsigned int& SCREENWIDTH, const unsigned int& SCREENHEIGHT, std::vector<uint8_t>& indices,const int& row, const int& line, Texture* texture );
+	void init(std::vector<uint8_t>& indices,const int& row, const int& line, Texture* texture,const glm::ivec2& offset,const unsigned int& BRICKSIZE);
 
-	const int BRICK_SIZE = 32;
-
+	
+	std::vector<glm::vec2> Pixels_UV_Coords;
 
 
 };

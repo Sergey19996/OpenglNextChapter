@@ -131,7 +131,7 @@ std::vector<uint8_t>& indicesGenerator::AlgorithmLakeGround(unsigned int width, 
 
 
 		do {
-			std::cout << "recalculate " << std::endl;
+			
 			lakesRoots[i] = rand() % (width * height);;       // Записываю его в вектор 
 
 
@@ -273,81 +273,4 @@ std::vector<uint8_t>& indicesGenerator::AlgorithmLakeGround(unsigned int width, 
 	}
 
 	return indices;
-}
-
-Direction indicesGenerator::CheckDirection(glm::vec2 vector)
-{
-	glm::vec2 compass[] = {
-		glm::vec2(-0.7f,-0.7f),  // LeftUp
-		glm::vec2(0.0f,-1.0f),  // Up
-		glm::vec2(0.7f,-0.7f),  // RighttUp
-		glm::vec2(1.0f,0.0f),  // right
-		glm::vec2(0.7f,0.7f),  // RightDown
-		glm::vec2(0.0f,1.0f), // Down
-		glm::vec2(-0.7f,0.7f),  // LeftDown
-		glm::vec2(-1.0f,0.0f)  // Left
-	};
-	float max = 0.0f; // cos 0 - перпендикуляр в dot
-	unsigned int best_match = -1;
-	for (unsigned int i = 0; i < 8; i++) {
-
-		float dot_product = glm::dot(glm::normalize(vector), compass[i]);
-		if (dot_product > max)
-		{
-			max = dot_product;
-			best_match = i;
-		}
-	}
-
-
-	return (Direction)best_match; // на какую сторону проекция дала ближе к 1, то и вернёт
-
-	
-}
-
-void indicesGenerator::DefiniteCell(const glm::vec2& distance , uint8_t& currIndex)
-{
-
-
-
-	switch (CheckDirection(distance))    // в зависимости от клетки мы назначаем соотвествующую логику 
-	{
-	case Direction::LEFTUP:
-
-
-		currIndex = 0;
-		break;
-	case Direction::UP:
-
-		currIndex = 1;
-		break;
-	case Direction::RIGHTUP:
-
-		currIndex = 3;
-		break;
-	case Direction::RIGHT:
-
-		currIndex = 11;
-		break;
-	case Direction::RIGHTDOWN:
-
-		currIndex = 27;
-		break;
-	case Direction::DOWN:
-
-		currIndex  = 25;
-		break;
-	case Direction::LEFTDOWN:
-
-		currIndex = 24;
-		break;
-	case Direction::LEFT:
-
-
-		currIndex = 8;
-		break;
-	default:
-		break;
-	}
-
 }

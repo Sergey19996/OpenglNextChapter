@@ -5,11 +5,14 @@
 #include <glm/glm.hpp>
 #include "graphics/Level/GameLevel.h"
 
+
 enum GameState {
 	GAME_ACTIVE,
 	GAME_MENU,
 	GAME_WIN
 };
+
+
 
 class Game {
 public:
@@ -39,8 +42,13 @@ public:
 
 private:
 
+	float timer = 0.0f;
+
+	glm::vec2 offset;
+
 	static bool Keys[];
 	static bool KeysProcessed[];
+	void AnimationTimer(float dt);
 };
 
 

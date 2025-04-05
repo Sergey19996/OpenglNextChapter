@@ -2,7 +2,7 @@
 #define  INDICES_GENERATOR_H
 #include <vector>
 #include <glm/glm.hpp>
-#include "WaterData.h"
+
 
 // Represents the four possible (collision) directions
 
@@ -20,8 +20,6 @@ public:
 private:
 	std::vector <uint8_t> indices;
 
-	Direction CheckDirection(glm::vec2 vector);
-	void DefiniteCell(const glm::vec2& distance,uint8_t& currIndex);
 
 };
 

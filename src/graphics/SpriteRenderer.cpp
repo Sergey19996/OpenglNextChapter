@@ -51,11 +51,11 @@ void SpriteRenderer::initRendererData(unsigned int widthX, unsigned int height,u
 	////  VAO/VBO
 	float vertices[] = {
 	// vrtx         UV
-   1.0f,  1.0f,		u2,v2,		 // top right    0
-   1.0f,  0.0f,		u2,v1,			// bottom right 1
-   0.0f,  1.0f,		u1,v2,			// top left     2
+   1.0f,  1.0f,		1,1,		 // top right    0
+   1.0f,  0.0f,		1,0,			// bottom right 1
+   0.0f,  1.0f,		0,1,			// top left     2
    // vrtx           UV
-   0.0f, 0.0f, 		u1,v1,			// bottom left  3
+   0.0f, 0.0f, 		0,0,			// bottom left  3
 	};
 	unsigned int indices[] = {
 		0,3,2,

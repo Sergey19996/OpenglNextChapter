@@ -165,3 +165,15 @@ void Shader::setMat4(const std::string& name, glm::mat4 matrix)
 	int timeValueLocation = glGetUniformLocation(ID, name.c_str());
 	glUniformMatrix4fv(timeValueLocation,1,GL_FALSE, glm::value_ptr(matrix));
 }
+
+void Shader::setivec2(const std::string& name, glm::ivec2 value){
+
+	int tilmeValueLocation = glGetUniformLocation(ID, name.c_str());
+	glUniform2i(tilmeValueLocation, value.x, value.y);
+}
+
+void Shader::setvec2(const std::string& name, glm::vec2 value)
+{
+	int tilmeValueLocation = glGetUniformLocation(ID, name.c_str());
+	glUniform2f(tilmeValueLocation, value.x, value.y);
+}
