@@ -21,7 +21,7 @@ private:
 
 	uint8_t charDirection;
 	glm::vec2 UVCoords;
-	glm::vec2 Velocity;
+
 };
 
 

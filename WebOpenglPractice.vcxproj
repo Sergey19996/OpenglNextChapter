@@ -134,8 +134,9 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\graphics\algorithms\indicesGenerator.cpp" />
     <ClCompile Include="src\graphics\algorithms\WaterData.cpp" />
+    <ClCompile Include="src\graphics\Effects\Cracks.cpp" />
+    <ClCompile Include="src\graphics\Effects\Particle.cpp" />
     <ClCompile Include="src\graphics\Level\GameLevel.cpp" />
-    <ClCompile Include="src\graphics\models\BrickObject.cpp" />
     <ClCompile Include="src\graphics\models\Character.cpp" />
     <ClCompile Include="src\graphics\models\GameObject.cpp" />
     <ClCompile Include="src\graphics\ResourceManager.cpp" />
@@ -146,14 +147,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\fragmentShader.glsl" />
+    <None Include="Assets\shaders\particleFS.glsl" />
+    <None Include="Assets\shaders\particleVS.glsl" />
     <None Include="Assets\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\graphics\algorithms\indicesGenerator.h" />
     <ClInclude Include="src\graphics\Direction.hpp" />
+    <ClInclude Include="src\graphics\Effects\Cracks.h" />
+    <ClInclude Include="src\graphics\Effects\Particle.h" />
     <ClInclude Include="src\graphics\Level\GameLevel.h" />
-    <ClInclude Include="src\graphics\models\BrickObject.h" />
     <ClInclude Include="src\graphics\models\Character.h" />
     <ClInclude Include="src\graphics\models\GameObject.h" />
     <ClInclude Include="src\graphics\models\WaterObject.h" />

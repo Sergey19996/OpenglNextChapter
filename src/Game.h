@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include "graphics/Level/GameLevel.h"
-
+#include "graphics/models/Character.h"
 
 enum GameState {
 	GAME_ACTIVE,
@@ -30,8 +30,8 @@ public:
 	void Update(float dt);
 	void Render();
 
-	GameLevel gameLevel;
-	unsigned int Level;
+
+	unsigned static int Level;
 
 
 	void ResetLevel();
@@ -49,6 +49,8 @@ private:
 	static bool Keys[];
 	static bool KeysProcessed[];
 	void AnimationTimer(float dt);
+	void DoCollisions();
+	bool checkCollision(character& player, GameObject& box);
 };
 
 

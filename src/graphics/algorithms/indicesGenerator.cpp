@@ -62,8 +62,7 @@ uint8_t indicesGenerator::GenerateGroundIndex(uint8_t escapingNumber)
 
 std::vector<uint8_t>& indicesGenerator::AlgorithmBasicGround(unsigned int width, unsigned int line)
 {
-		 indices.clear();
-		 indices.resize(width * line);  //хранит значения Uint8_t где 255 макс число 
+		
 
 	for (unsigned int idx = 0; idx < width * line; idx++)
 	{
@@ -273,4 +272,10 @@ std::vector<uint8_t>& indicesGenerator::AlgorithmLakeGround(unsigned int width, 
 	}
 
 	return indices;
+}
+
+void indicesGenerator::reset()
+{
+	indices.clear();
+
 }

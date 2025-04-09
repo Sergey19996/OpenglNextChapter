@@ -3,11 +3,11 @@
 #include "../Direction.hpp"
 
 
-character::character() : GameObject(),charDirection(0),Velocity(0)
+character::character() : GameObject(),charDirection(0)
 {
 }
 
-character::character(glm::vec2 pos, glm::vec2 size,glm::vec2 velocity, float angle, Texture* texture, uint8_t charDirection) : GameObject(pos, size, angle, texture), charDirection(charDirection),Velocity(velocity)
+character::character(glm::vec2 pos, glm::vec2 size,glm::vec2 velocity, float angle, Texture* texture, uint8_t charDirection) : GameObject(pos, size, angle, texture,glm::vec4(1.0f),velocity), charDirection(charDirection)
 {
 	Calc_UV_Direction(charDirection, velocity);
 }
@@ -24,13 +24,15 @@ void character::Draw(SpriteRenderer& renderer){
 	Shader& Shader = ResourceManager::GetShader("sprite");
 	float TexWidth = ResourceManager::GetTexture("Char").Width;
 	float TexHeight = ResourceManager::GetTexture("Char").Height;
+	Shader.use();
+
 	Shader.setvec2("spriteScale", { 128.0f / TexWidth,128.0f / TexHeight });
 
 
 	// переводим позицию с пикселей в диапозон от 0 до 1 
 	Shader.setvec2("uv", { UVCoords.x / TexWidth,UVCoords.y / TexHeight });
 	//UVCoords
-
+	Shader.setvec4("color", color);
 
 	renderer.DrawSprite(*texture, pos, size, rotate);
 
@@ -48,7 +50,7 @@ void character::update(float dt, const glm::ivec2& Squere, const glm::ivec2& off
 {
 	
 
-	this->pos += Velocity * dt;
+	this->pos += velocity * dt;
 	
 	glm::vec2 Correction = { size.x / 4, size.y / 4 };
 
@@ -79,24 +81,28 @@ void character::Calc_UV_Direction(const uint8_t& direction, const glm::vec2& ini
 	case Down:
 
 		UVCoords.x = 0.0f;
-		Velocity.y = initialVelocity.x;
-		Velocity.x = initialVelocity.y;
+
+		velocity.y = initialVelocity.x;
+		velocity.x = initialVelocity.y;
 	break;
 	case Right:
 		UVCoords.x = 128.0f;
-		Velocity.x = initialVelocity.x;
-		Velocity.y = initialVelocity.y;
+
+		velocity.x = initialVelocity.x;
+		velocity.y = initialVelocity.y;
 		break;
 	case Up:
 		UVCoords.x = 128.0f * 2;
-		Velocity.y = -initialVelocity.x;
-		Velocity.x = initialVelocity.y;
+
+		velocity.y = -initialVelocity.x;
+		velocity.x = initialVelocity.y;
 	break;
 	break;
 	case Left:
 		UVCoords.x = 128.0f * 3;
-		Velocity.x = -initialVelocity.x;
-		Velocity.y = initialVelocity.y;
+
+		velocity.x = -initialVelocity.x;
+		velocity.y = initialVelocity.y;
 	break;
 	default:
 		std::cout << "Error with Character::CalcUV "<<std::endl;	
@@ -104,7 +110,7 @@ void character::Calc_UV_Direction(const uint8_t& direction, const glm::vec2& ini
 	}
 
 
-	std::cout << Velocity.x << std::endl;
+	
 
 
 

@@ -177,3 +177,9 @@ void Shader::setvec2(const std::string& name, glm::vec2 value)
 	int tilmeValueLocation = glGetUniformLocation(ID, name.c_str());
 	glUniform2f(tilmeValueLocation, value.x, value.y);
 }
+
+void Shader::setvec4(const std::string& name, glm::vec4 value)
+{
+	int tilmeValueLocation = glGetUniformLocation(ID, name.c_str());
+	glUniform4f(tilmeValueLocation, value.x, value.y,value.z,value.a);
+}

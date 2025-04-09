@@ -1,4 +1,12 @@
-﻿  Game.cpp
+﻿  GameLevel.cpp
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(48,17): warning C4244: 'initializing': conversion from 'unsigned int' to 'float', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(49,18): warning C4244: 'initializing': conversion from 'unsigned int' to 'float', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(129,22): warning C4244: 'initializing': conversion from 'unsigned int' to 'float', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(130,19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(132,29): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(134,30): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(139,13): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp(140,13): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   WebOpenglPractice.vcxproj -> D:\C++\Learning\WebOpenglPractice\x64\Debug\WebOpenglPractice.exe
   "pwsh.exe" не является внутренней или внешней
   командой, исполняемой программой или пакетным файлом.

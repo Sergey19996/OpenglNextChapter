@@ -38,14 +38,7 @@ void SpriteRenderer::DrawSprite(Texture& texture, glm::vec2 position, glm::vec2 
 
 void SpriteRenderer::initRendererData(unsigned int widthX, unsigned int height,unsigned int CellSize)
 {
-	float u1, v1, u2, v2, wh, x, y;
-
-	 x = 0, y = 0;
-	 wh = CellSize;
-	 u1 = x / widthX;
-	 v1 = y / height;
-	 u2 = (x + wh) / widthX;
-	 v2 = (y + wh) / height;
+	
 	 
 
 	////  VAO/VBO

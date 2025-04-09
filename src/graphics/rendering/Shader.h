@@ -29,7 +29,7 @@ public:
 	void setMat4(const std::string& name, glm::mat4 matrix);
 	void setivec2(const std::string& name, glm::ivec2 value);
 	void setvec2(const std::string& name, glm::vec2 value);
-
+	void setvec4(const std::string& name, glm::vec4 value);
 };
 
 

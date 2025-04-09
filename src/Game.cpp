@@ -1,21 +1,28 @@
 #include "Game.h"
 #include "graphics/ResourceManager.h"
 #include "graphics/SpriteRenderer.h"
-#include "graphics/models/Character.h"
+#include "graphics/Effects/Particle.h"
+
 #include "graphics/Direction.hpp"
 
+ std::vector<void(*)(GLFWwindow* windiw, int key, int scancode, int action, int mods)>Game::keyCallbacks;
+ unsigned int Game::Level = 1;
 const int BRICK_SIZE = 32;
 const glm::ivec2 SQUERE_SIZE = { 384,256 };
 
 SpriteRenderer* renderer;
 character* player;
- std::vector<void(*)(GLFWwindow* windiw, int key, int scancode, int action, int mods)>Game::keyCallbacks;
+ParticleGenerator* particles;
+
+GameLevel* gameLevel;
+
 
  bool::Game::Keys[GLFW_KEY_LAST] = { 0 };  //GLFW_KEY_LAST это константа, которая задаёт максимальное количество клавиш, распознаваемых GLFW.
  bool Game::KeysProcessed[GLFW_KEY_LAST] = { 0 };
 
  // Initial velocity of the player paddle
  const glm::vec2 INITIAL_PLAYER_VELOCITY(50.0f,0.0f);
+ glm::vec2 CURRENT_PLAYER_VELOCITY(0.0f, 0.0f);
 
  const float timeClamp = 0.05f;
 
@@ -29,30 +36,49 @@ Game::Game(unsigned int width, unsigned int height) :  Width(width), Height(heig
 Game::~Game()
 {
 	delete renderer;
+	delete particles;
+	delete player;
+	delete gameLevel;
 
 }
 
 void Game::Init()
 {
 	offset = {Width / 2 - SQUERE_SIZE.x / 2,Height / 2 - SQUERE_SIZE.y / 2 };
-	
+	CURRENT_PLAYER_VELOCITY = INITIAL_PLAYER_VELOCITY * 2.0f;
 
 
 	ResourceManager::LoadShader("Assets/shaders/vertexShader.glsl", "Assets/shaders/fragmentShader.glsl", nullptr, "sprite");
+	ResourceManager::LoadShader("Assets/shaders/particleVS.glsl", "Assets/shaders/particleFS.glsl", nullptr, "particle");
+
+
+
 	ResourceManager::LoadTexture("Assets/textures/Plates_Clear.png", true, "plates");
 	ResourceManager::LoadTexture("Assets/textures/Character.png", true, "Char");
-	ResourceManager::GetShader("sprite").use().setInt("texture0", 0);
+	ResourceManager::LoadTexture("Assets/textures/particle.png", true, "Stones");
+	ResourceManager::LoadTexture("Assets/textures/Plates_Cracking.png", true, "Cracks");
+	ResourceManager::LoadTexture("Assets/textures/BackGround.png", true, "background");
+
 	 renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"), ResourceManager::GetTexture("plates").Width, ResourceManager::GetTexture("plates").Height, 128);  // передаем для плейна, который берёт тайл в 128
-	 gameLevel.Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE);
+	gameLevel = new GameLevel();
+	 gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE,Level-1);
+	 particles = new ParticleGenerator(ResourceManager::GetShader("particle"), ResourceManager::GetTexture("Stones"), 100);
+	
 
 	 glm::mat4 ortoMatrix = glm::ortho(0.0f, static_cast<float>(Width), static_cast<float>(Height), 0.0f, -1.0f, 1.0f);
 
+
+	 //configure shaders
+	 ResourceManager::GetShader("sprite").use().setInt("texture0", 0);
 	 ResourceManager::GetShader("sprite").setMat4("projection", ortoMatrix);
+	 ResourceManager::GetShader("particle").use().setInt("texture0", 0);
+	 ResourceManager::GetShader("particle").setMat4("projection", ortoMatrix);
 
-	 glm::vec2 CharSize = { 48.0f,48.0f };
-	 player = new character(offset-CharSize / 4.0f, CharSize,INITIAL_PLAYER_VELOCITY, 0, &ResourceManager::GetTexture("Char"),charDirection::Right);
+	 glm::vec2 CharSize = {48.0f,48.0f };
 
+	 player = new character(offset-CharSize / 4.0f, CharSize, CURRENT_PLAYER_VELOCITY , 0, &ResourceManager::GetTexture("Char"),charDirection::Right);
 
+	
 }
 
 
@@ -67,26 +93,48 @@ void Game::ProcessInput(float dt)
 }
 void Game::Update(float dt){
 
+	if (this->State == GAME_ACTIVE){
+
+	DoCollisions();
+
 	AnimationTimer(dt);
-
-
-
 	ProcessInput(dt);
-
 	player->update(dt, SQUERE_SIZE, offset);
-	
+	particles->Update(dt);
+	gameLevel->Update(dt);
 
+	
+	if (gameLevel->IsCompleted()) {
+		this->ResetLevel();
+		this->ResetPlayer();
+		this->State = GAME_WIN;
+		Level++;
+		
+		gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE,Level);
+
+	}
+
+	}
 }
 
 void Game::Render(){
-	if (this->State == GAME_ACTIVE || this->State == GAME_MENU) {
+	if (this->State == GAME_ACTIVE || this->State == GAME_MENU || this->State == GAME_WIN) {
 
 
 		
 
-		gameLevel.Draw(*renderer);
 
 		ResourceManager::GetShader("sprite").use();
+		ResourceManager::GetShader("sprite").setvec2("spriteScale", { 1.0f,1.0f });
+		ResourceManager::GetShader("sprite").setvec2("uv", { 0.0f ,0.0f });
+		ResourceManager::GetShader("sprite").setvec4("color", {1.0f,1.0f,1.0f,1.0f});
+		renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f);
+
+
+		gameLevel->Draw(*renderer);
+
+		particles->Draw();
+		player->Draw(*renderer);
 			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			//std::cout << x <<"\t" << y << std::endl;
 		
@@ -94,8 +142,6 @@ void Game::Render(){
 
 
 		
-		player->Draw(*renderer);
-
 
 
 
@@ -105,44 +151,63 @@ void Game::Render(){
 
 }
 
+void Game::ResetLevel()
+{
+	particles->reset(true);
+}
+
+void Game::ResetPlayer()
+{
+	offset = { Width / 2 - SQUERE_SIZE.x / 2,Height / 2 - SQUERE_SIZE.y / 2 };
+	glm::vec2 CharSize = { 48.0f,48.0f };
+	player->pos = offset - CharSize / 4.0f;
+	player->velocity = { INITIAL_PLAYER_VELOCITY.x * Level,INITIAL_PLAYER_VELOCITY.y * Level };
+	player->rotate = 0;
+	player->setDirection(charDirection::Right,INITIAL_PLAYER_VELOCITY);
+}
+
 void Game::sceneEvent(){
+
+
+	if (this->State == GAME_MENU) {
+
+		if (this->Keys[GLFW_KEY_SPACE]) {
+
+			this->State = GAME_ACTIVE;
+			//	this->KeysProcessed[GLFW_KEY_ENTER] = true;
+		/*	}
+			if (this->Keys[GLFW_KEY_W] && !this->KeysProcessed[GLFW_KEY_W])
+			{
+				this->Level = (this->Level + 1) % 4;
+				this->KeysProcessed[GLFW_KEY_W] = true;
+			}
+			if (this->Keys[GLFW_KEY_S] && !this->KeysProcessed[GLFW_KEY_S])
+			{
+				if (this->Level > 0)
+					--this->Level;
+				else
+					this->Level = 3;
+				this->KeysProcessed[GLFW_KEY_S] = true;
+
+
+			}*/
+
+		}
+	}
 
 		if (this->State == GAME_WIN) {
 
-			if (this->Keys[GLFW_KEY_ENTER] && !this->KeysProcessed[GLFW_KEY_ENTER])
+			if( this->Keys[GLFW_KEY_SPACE])
 			{
 				//	this->KeysProcessed[GLFW_KEY_ENTER] = true;
 				//	Effects->Chaos = false;
-				this->State = GAME_MENU;
+ 				this->State = GAME_MENU;
 
 			}
 
 		}
 
-		if (this->State == GAME_MENU) {
-
-			if (this->Keys[GLFW_KEY_ENTER] && !this->KeysProcessed[GLFW_KEY_ENTER]) {
-
-				this->State = GAME_ACTIVE;
-				//	this->KeysProcessed[GLFW_KEY_ENTER] = true;
-			/*	}
-				if (this->Keys[GLFW_KEY_W] && !this->KeysProcessed[GLFW_KEY_W])
-				{
-					this->Level = (this->Level + 1) % 4;
-					this->KeysProcessed[GLFW_KEY_W] = true;
-				}
-				if (this->Keys[GLFW_KEY_S] && !this->KeysProcessed[GLFW_KEY_S])
-				{
-					if (this->Level > 0)
-						--this->Level;
-					else
-						this->Level = 3;
-					this->KeysProcessed[GLFW_KEY_S] = true;
-
-
-				}*/
-
-			}
+	
 
 			if (this->State == GAME_ACTIVE) {
 
@@ -150,21 +215,20 @@ void Game::sceneEvent(){
 				if (this->Keys[GLFW_KEY_V] && !this->KeysProcessed[GLFW_KEY_V])
 				{
 
-					gameLevel.Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE);
+				
 
 				}
 				
 
 			}
 
-		}
 
 
 		if (this->Keys[GLFW_KEY_A])
 		{
 			if (player->pos.x >= 0.0f) {
 				//		player->pos.x -= velocity;
-				player->setDirection(charDirection::Left, INITIAL_PLAYER_VELOCITY);
+				player->setDirection(charDirection::Left, CURRENT_PLAYER_VELOCITY);
 
 			}
 
@@ -176,7 +240,7 @@ void Game::sceneEvent(){
 			if (player->pos.x <= this->Width - player->size.x)
 			{
 				//	player->pos.x += velocity;
-				player->setDirection(charDirection::Right, INITIAL_PLAYER_VELOCITY);
+				player->setDirection(charDirection::Right, CURRENT_PLAYER_VELOCITY);
 				std::cout << "HELLO" << std::endl;
 			}
 
@@ -187,7 +251,7 @@ void Game::sceneEvent(){
 		{
 			if (player->pos.y >= 0.0f) {
 				//		player->pos.y -= velocity;
-				player->setDirection(charDirection::Up, INITIAL_PLAYER_VELOCITY);
+				player->setDirection(charDirection::Up, CURRENT_PLAYER_VELOCITY);
 
 			}
 
@@ -199,7 +263,7 @@ void Game::sceneEvent(){
 			if (player->pos.y <= this->Height - player->size.y)
 			{
 				//		player->pos.y += velocity;
-				player->setDirection(charDirection::Down,INITIAL_PLAYER_VELOCITY);
+				player->setDirection(charDirection::Down, CURRENT_PLAYER_VELOCITY);
 
 			}
 
@@ -241,8 +305,100 @@ void Game::sceneEvent(){
 
 			timer -= timer;
 			player->UVPulse();
-			
+			particles->Spawn(*player, 2, glm::vec2(player->size.x / 2.0f - 5, player->size.y / 2.0f - 5));
+		
 		}
 
 
+	}
+
+	void Game::DoCollisions()
+	{
+		for (GameObject& box : gameLevel->Bricks) {
+
+				bool bCollision = checkCollision(*player, box); // checking on collision with box
+
+			if (!box.bDestroyed) {   // when box not bDestroyed
+
+
+				if (bCollision == true){   
+
+
+
+					if (!box.IsSolid) {   
+
+						//box.bDestroyed = true;
+						if(!box.prepared)
+						gameLevel->PreparateDestroy(&box);
+
+					}
+
+					if (box.IsDanger) {
+						//dead
+						this->ResetLevel();
+						this->ResetPlayer();
+						this->State = GAME_MENU;
+						
+
+						gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE, Level);
+
+					}
+
+
+				}
+
+
+
+
+
+			}
+			else
+			{
+				//dead
+				if (bCollision == true) {
+					this->ResetLevel();
+					this->ResetPlayer();
+					this->State = GAME_MENU;
+
+
+					gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE, Level);
+				}
+			}
+
+
+		}
+
+	}
+
+	bool Game::checkCollision(character& player, GameObject& box)
+	{
+
+
+		//get center point circle first
+		glm::vec2 center(player.pos + player.size / 2.0f);
+		//Calculate AABB info
+		glm::vec2 aabb_half_extens(box.size / 2.0f);
+		glm::vec2 aabb_center(box.pos + aabb_half_extens);
+		glm::vec2 difference = center - aabb_center;
+
+		glm::vec2 clmaped = glm::clamp(difference, -aabb_half_extens, aabb_half_extens); //nearest point in local space  -aabb, +aabb
+		glm::vec2 closest = aabb_center + clmaped; // nearest point in world
+
+		difference = closest - center; // вектор от сентра к ближайшей точк
+
+		if (glm::length(difference) <= 0.01) {
+			return true;
+
+
+
+		}
+		else
+		{
+			return false;
+		}
+
+
+
+
+		return false;
 	}

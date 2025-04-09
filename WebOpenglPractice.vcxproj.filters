@@ -33,9 +33,6 @@
     <ClCompile Include="src\graphics\models\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\models\BrickObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\Level\GameLevel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,10 +48,18 @@
     <ClCompile Include="src\graphics\models\Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\Effects\Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\Effects\Cracks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\vertexShader.glsl" />
     <None Include="Assets\shaders\fragmentShader.glsl" />
+    <None Include="Assets\shaders\particleVS.glsl" />
+    <None Include="Assets\shaders\particleFS.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\rendering\Shader.h">
@@ -70,9 +75,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\models\GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\graphics\models\BrickObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\Level\GameLevel.h">
@@ -91,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\Direction.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\Effects\Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\Effects\Cracks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
