@@ -16,6 +16,8 @@
 #include <vector>
 #include <random>
 
+
+
 #define SCREENWIDTH 800
 #define SCREENHEIGHT 608
 
@@ -57,7 +59,20 @@ void keyChanged(GLFWwindow* window, int key, int scancode, int action, int mods)
 	};
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		saveGame(BlocksDestroyer.getSaveData(), "save/saveGame.bin");
+		unsigned int LoadedRecord = 0;
+		if (loadGame(LoadedRecord, "save/saveRecord.bin")) // если файл есть то мы подгружаем старый прогресс
+		{
+			if (Game::RECORD > LoadedRecord) // если текущий рекорд больше подгруженого
+			{
+				saveGame(Game::RECORD, "save/saveRecord.bin");  // то мы 
+
+			}
+		}
+
 		glfwSetWindowShouldClose(window, true);
+	}
 
 
 	

@@ -26,10 +26,11 @@ public:
 	void setFloat(const std::string& name, float value) const;
 	void setFloatArray(const std::string& name, float* firstvalue,int size) const;
 	void setIntArray(const std::string& name, int* array, int size) const;
-	void setMat4(const std::string& name, glm::mat4 matrix);
+	void setMat4(const std::string& name, glm::mat4 matrix, bool useShader = false);
 	void setivec2(const std::string& name, glm::ivec2 value);
 	void setvec2(const std::string& name, glm::vec2 value);
 	void setvec4(const std::string& name, glm::vec4 value);
+	void setvec3f(const std::string& name, glm::vec3 value);
 };
 
 

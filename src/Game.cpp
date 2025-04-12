@@ -5,17 +5,34 @@
 
 #include "graphics/Direction.hpp"
 
+#include "graphics/Text/TextRenderer.h"
+#include "sstream"
+
+#include "audio/SoundSource.h"
+#include "audio/SoundDevice.h"
+#include "audio/SoundBuffer.h"
+#include "audio/MusicBuffer.h"
+
+
+
+
+
+unsigned int Game::RECORD = 0;
+unsigned int Game::POINTS = 0;
  std::vector<void(*)(GLFWwindow* windiw, int key, int scancode, int action, int mods)>Game::keyCallbacks;
- unsigned int Game::Level = 1;
+
 const int BRICK_SIZE = 32;
 const glm::ivec2 SQUERE_SIZE = { 384,256 };
 
 SpriteRenderer* renderer;
 character* player;
 ParticleGenerator* particles;
-
+TextRenderer* text;
 GameLevel* gameLevel;
 
+SoundDevice* soundDevice; //singleton
+SoundSource Speaker;
+MusicBuffer* music;
 
  bool::Game::Keys[GLFW_KEY_LAST] = { 0 };  //GLFW_KEY_LAST это константа, которая задаёт максимальное количество клавиш, распознаваемых GLFW.
  bool Game::KeysProcessed[GLFW_KEY_LAST] = { 0 };
@@ -25,7 +42,7 @@ GameLevel* gameLevel;
  glm::vec2 CURRENT_PLAYER_VELOCITY(0.0f, 0.0f);
 
  const float timeClamp = 0.05f;
-
+ const unsigned int TEXTSIZE = 24;
 
 
 
@@ -39,18 +56,32 @@ Game::~Game()
 	delete particles;
 	delete player;
 	delete gameLevel;
+	delete text;
+	delete music;
 
 }
 
 void Game::Init()
 {
+
 	offset = {Width / 2 - SQUERE_SIZE.x / 2,Height / 2 - SQUERE_SIZE.y / 2 };
 	CURRENT_PLAYER_VELOCITY = INITIAL_PLAYER_VELOCITY * 2.0f;
+	if (!loadGame(saveData, "save/saveGame.bin")) // when we go out from the game in some progress
+		saveGame(saveData, "save/saveGame.bin");
 
+	if (!loadGame(RECORD, "save/saveRecord.bin"))
+		saveGame(RECORD, "save/saveRecord.bin");
+
+	soundDevice = SoundDevice::get();
+	//uint32_t Music = SoundBuffer::get()->addSoundEffect("Assets/audio/Main_Music.mp3");
+	//Speaker.generate();
+	//Speaker.Play(Music);*/
+	music = new MusicBuffer("Assets/audio/Main_Music.mp3");
+	music->Play();
 
 	ResourceManager::LoadShader("Assets/shaders/vertexShader.glsl", "Assets/shaders/fragmentShader.glsl", nullptr, "sprite");
 	ResourceManager::LoadShader("Assets/shaders/particleVS.glsl", "Assets/shaders/particleFS.glsl", nullptr, "particle");
-
+	ResourceManager::LoadShader("Assets/shaders/particleVS.glsl", "Assets/shaders/particleFS.glsl", nullptr, "particle");
 
 
 	ResourceManager::LoadTexture("Assets/textures/Plates_Clear.png", true, "plates");
@@ -61,7 +92,7 @@ void Game::Init()
 
 	 renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"), ResourceManager::GetTexture("plates").Width, ResourceManager::GetTexture("plates").Height, 128);  // передаем для плейна, который берёт тайл в 128
 	gameLevel = new GameLevel();
-	 gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE,Level-1);
+	 gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE,saveData.Level);
 	 particles = new ParticleGenerator(ResourceManager::GetShader("particle"), ResourceManager::GetTexture("Stones"), 100);
 	
 
@@ -78,6 +109,9 @@ void Game::Init()
 
 	 player = new character(offset-CharSize / 4.0f, CharSize, CURRENT_PLAYER_VELOCITY , 0, &ResourceManager::GetTexture("Char"),charDirection::Right);
 
+	 text = new TextRenderer(this->Width, this->Height);
+	 text->Load("Assets/fonts/Rubik-ExtraBold.ttf", TEXTSIZE);
+	
 	
 }
 
@@ -108,20 +142,23 @@ void Game::Update(float dt){
 		this->ResetLevel();
 		this->ResetPlayer();
 		this->State = GAME_WIN;
-		Level++;
+		saveData.Level++;
 		
-		gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE,Level);
+		gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE, saveData.Level);
 
 	}
+
+	if (POINTS > RECORD)
+		RECORD = POINTS;
 
 	}
 }
 
 void Game::Render(){
-	if (this->State == GAME_ACTIVE || this->State == GAME_MENU || this->State == GAME_WIN) {
+	
 
 
-		
+	music->UpdateBufferStream();
 
 
 		ResourceManager::GetShader("sprite").use();
@@ -141,14 +178,72 @@ void Game::Render(){
 		
 
 
+		if (this->State == GAME_MENU) {
+			std::string sMenu = "MENU";
+			text->RenderText(sMenu, Width / 2.0f - (sMenu.size() * TEXTSIZE / 2.0f), Height / 2.0f - sMenu.size() * TEXTSIZE / 2.0f , 2.0f);
+
+		}
+		else  if (this->State == GAME_WIN) {
+			std::string sWind = "WIN";
+			text->RenderText(sWind, Width / 2.0f - sWind.size() * TEXTSIZE / 2.0, Height / 2.0f - sWind.size() * TEXTSIZE / 2.0, 1.5f);
+
+		}
+		else{
+		std::stringstream ss, sp,sr, sh; ss << saveData.Level;
+		text->RenderText("Level: " + ss.str(), Width / 2.0f - SQUERE_SIZE.x / 2.0f, Height / 2.0f-SQUERE_SIZE.y / 2.0f - TEXTSIZE * 2.0f, 0.8f);
+		sp << POINTS;
+		text->RenderText("Points : " + sp.str(), Width / 2.0f + sp.str().size() * TEXTSIZE, Height / 2.0f - SQUERE_SIZE.y / 2.0f - TEXTSIZE * 2.0f, 0.8f);
+		sr << RECORD;
+		text->RenderText("RECORD : " + sr.str(), Width / 2.0f + sp.str().size() * TEXTSIZE, Height / 2.0f + SQUERE_SIZE.y / 2.0f + TEXTSIZE * 2.0f, 1.0f);
+		sh << saveData.currLife;
+		text->RenderText("LIFE : " + sh.str(), Width / 2.0f - sh.str().size() * TEXTSIZE, Height / 2.0f - SQUERE_SIZE.y / 2.0f - TEXTSIZE * 2.0f, 0.8f);
+
 		
 
+		
+		}
 
 
+
+
+	
+
+
+	
+
+
+}
+
+void Game::CharDeath(){
+	//dead
+	if (saveData.currLife > 0) {
+	saveData.currLife--;
+	}
+	else
+	{
+
+		saveData.Level = 1;
+		saveData.currLife = saveData.Life;
+		unsigned int LoadedRecord = 0;
+
+		if (loadGame(LoadedRecord, "save/saveRecord.bin")) // если файл есть то мы подгружаем старый прогресс
+		{
+			if (RECORD > LoadedRecord) // если текущий рекорд больше подгруженого
+			{
+				saveGame(RECORD, "save/saveRecord.bin");  // то мы 
+
+			}
+		}
+
+	
 	}
 
+	this->ResetLevel();
+	this->ResetPlayer();
+	this->State = GAME_MENU;
+	POINTS = 0;
 
-
+	gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE, saveData.Level);
 }
 
 void Game::ResetLevel()
@@ -161,9 +256,9 @@ void Game::ResetPlayer()
 	offset = { Width / 2 - SQUERE_SIZE.x / 2,Height / 2 - SQUERE_SIZE.y / 2 };
 	glm::vec2 CharSize = { 48.0f,48.0f };
 	player->pos = offset - CharSize / 4.0f;
-	player->velocity = { INITIAL_PLAYER_VELOCITY.x * Level,INITIAL_PLAYER_VELOCITY.y * Level };
+	player->velocity = { CURRENT_PLAYER_VELOCITY.x * saveData.Level,CURRENT_PLAYER_VELOCITY.y * saveData.Level };
 	player->rotate = 0;
-	player->setDirection(charDirection::Right,INITIAL_PLAYER_VELOCITY);
+	player->setDirection(charDirection::Right, CURRENT_PLAYER_VELOCITY);
 }
 
 void Game::sceneEvent(){
@@ -328,21 +423,17 @@ void Game::sceneEvent(){
 					if (!box.IsSolid) {   
 
 						//box.bDestroyed = true;
-						if(!box.prepared)
+						if (!box.prepared)
+						{
+
 						gameLevel->PreparateDestroy(&box);
-
-					}
-
-					if (box.IsDanger) {
-						//dead
-						this->ResetLevel();
-						this->ResetPlayer();
-						this->State = GAME_MENU;
+						POINTS += 100;
 						
-
-						gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE, Level);
-
+						}
 					}
+
+					if (box.IsDanger) 
+						CharDeath();
 
 
 				}
@@ -356,12 +447,10 @@ void Game::sceneEvent(){
 			{
 				//dead
 				if (bCollision == true) {
-					this->ResetLevel();
-					this->ResetPlayer();
-					this->State = GAME_MENU;
+					CharDeath();
+					
 
 
-					gameLevel->Generate(&ResourceManager::GetTexture("plates"), BRICK_SIZE, offset, SQUERE_SIZE, Level);
 				}
 			}
 
@@ -402,3 +491,7 @@ void Game::sceneEvent(){
 
 		return false;
 	}
+
+	
+
+	

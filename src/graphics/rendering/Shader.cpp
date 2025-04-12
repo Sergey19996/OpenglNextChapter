@@ -160,8 +160,11 @@ void Shader::setIntArray(const std::string& name, int* array, int size) const
 	glUniform1iv(timeValueLocation, size, array);
 }
 
-void Shader::setMat4(const std::string& name, glm::mat4 matrix)
+void Shader::setMat4(const std::string& name, glm::mat4 matrix, bool useShader)
 {
+	if (useShader)
+		use();
+
 	int timeValueLocation = glGetUniformLocation(ID, name.c_str());
 	glUniformMatrix4fv(timeValueLocation,1,GL_FALSE, glm::value_ptr(matrix));
 }
@@ -182,4 +185,10 @@ void Shader::setvec4(const std::string& name, glm::vec4 value)
 {
 	int tilmeValueLocation = glGetUniformLocation(ID, name.c_str());
 	glUniform4f(tilmeValueLocation, value.x, value.y,value.z,value.a);
+}
+
+void Shader::setvec3f(const std::string& name, glm::vec3 value)
+{
+	int tilmeValueLocation = glGetUniformLocation(ID, name.c_str());
+	glUniform3f(tilmeValueLocation, value.x, value.y, value.z);
 }

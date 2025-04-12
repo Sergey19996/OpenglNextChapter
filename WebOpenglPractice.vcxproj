@@ -112,6 +112,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>freetype\freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,9 +132,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\audio\MusicBuffer.cpp" />
+    <ClCompile Include="src\audio\SoundBuffer.cpp" />
+    <ClCompile Include="src\audio\SoundDevice.cpp" />
+    <ClCompile Include="src\audio\SoundSource.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\graphics\algorithms\indicesGenerator.cpp" />
-    <ClCompile Include="src\graphics\algorithms\WaterData.cpp" />
+    <ClCompile Include="src\graphics\algorithms\CellData.cpp" />
     <ClCompile Include="src\graphics\Effects\Cracks.cpp" />
     <ClCompile Include="src\graphics\Effects\Particle.cpp" />
     <ClCompile Include="src\graphics\Level\GameLevel.cpp" />
@@ -141,6 +146,7 @@
     <ClCompile Include="src\graphics\models\GameObject.cpp" />
     <ClCompile Include="src\graphics\ResourceManager.cpp" />
     <ClCompile Include="src\graphics\SpriteRenderer.cpp" />
+    <ClCompile Include="src\graphics\Text\TextRenderer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\graphics\rendering\Shader.cpp" />
     <ClCompile Include="src\graphics\rendering\Texture.cpp" />
@@ -149,10 +155,17 @@
     <None Include="Assets\shaders\fragmentShader.glsl" />
     <None Include="Assets\shaders\particleFS.glsl" />
     <None Include="Assets\shaders\particleVS.glsl" />
+    <None Include="Assets\shaders\text_2d_fs.glsl" />
+    <None Include="Assets\shaders\text_2d_vs.glsl" />
     <None Include="Assets\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\audio\MusicBuffer.h" />
+    <ClInclude Include="src\audio\SoundBuffer.h" />
+    <ClInclude Include="src\audio\SoundDevice.h" />
+    <ClInclude Include="src\audio\SoundSource.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\graphics\algorithms\CellData.h" />
     <ClInclude Include="src\graphics\algorithms\indicesGenerator.h" />
     <ClInclude Include="src\graphics\Direction.hpp" />
     <ClInclude Include="src\graphics\Effects\Cracks.h" />
@@ -165,6 +178,7 @@
     <ClInclude Include="src\graphics\rendering\Texture.h" />
     <ClInclude Include="src\graphics\ResourceManager.h" />
     <ClInclude Include="src\graphics\SpriteRenderer.h" />
+    <ClInclude Include="src\graphics\Text\TextRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

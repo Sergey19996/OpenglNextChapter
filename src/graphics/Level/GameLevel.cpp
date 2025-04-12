@@ -81,6 +81,7 @@ void GameLevel::Update(float dt)
 			{
 				obj->bDestroyed = true;
 				
+				
 				particle->Spawn(*obj, 1, { obj->size.x / 2.0f - 5,obj->size.y / 2.0f - 5  });  //center - 5 half of particle tex (10)
 				particle->Spawn(*obj, 1, { 0 ,0}); // left up
 				particle->Spawn(*obj, 1, { obj->size.x - 10 ,obj->size.y  });// right up
@@ -101,8 +102,13 @@ bool GameLevel::IsCompleted()
 {
 	for (GameObject& brick : Bricks) {
 
+
+
 		if (!brick.prepared && !brick.IsSolid && !brick.IsDanger)
 			return false;
+
+		/*if (!brick.bDestroyed)
+			return false;*/
 	}
 
 

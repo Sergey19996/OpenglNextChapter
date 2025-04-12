@@ -1,6 +1,10 @@
+D:\C++\Learning\WebOpenglPractice\src\audio\MusicBuffer.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\MusicBuffer.obj
+D:\C++\Learning\WebOpenglPractice\src\audio\SoundBuffer.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\SoundBuffer.obj
+D:\C++\Learning\WebOpenglPractice\src\audio\SoundDevice.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\SoundDevice.obj
+D:\C++\Learning\WebOpenglPractice\src\audio\SoundSource.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\SoundSource.obj
 D:\C++\Learning\WebOpenglPractice\src\Game.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\Game.obj
 D:\C++\Learning\WebOpenglPractice\src\graphics\algorithms\indicesGenerator.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\indicesGenerator.obj
-D:\C++\Learning\WebOpenglPractice\src\graphics\algorithms\WaterData.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\WaterData.obj
+D:\C++\Learning\WebOpenglPractice\src\graphics\algorithms\CellData.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\CellData.obj
 D:\C++\Learning\WebOpenglPractice\src\graphics\Effects\Cracks.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\Cracks.obj
 D:\C++\Learning\WebOpenglPractice\src\graphics\Effects\Particle.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\Particle.obj
 D:\C++\Learning\WebOpenglPractice\src\graphics\Level\GameLevel.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\GameLevel.obj
@@ -8,6 +12,7 @@ D:\C++\Learning\WebOpenglPractice\src\graphics\models\Character.cpp;D:\C++\Learn
 D:\C++\Learning\WebOpenglPractice\src\graphics\models\GameObject.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\GameObject.obj
 D:\C++\Learning\WebOpenglPractice\src\graphics\ResourceManager.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\ResourceManager.obj
 D:\C++\Learning\WebOpenglPractice\src\graphics\SpriteRenderer.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\SpriteRenderer.obj
+D:\C++\Learning\WebOpenglPractice\src\graphics\Text\TextRenderer.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\TextRenderer.obj
 D:\C++\Learning\WebOpenglPractice\src\main.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\main.obj
 D:\C++\Learning\WebOpenglPractice\src\graphics\rendering\Shader.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\Shader.obj
 D:\C++\Learning\WebOpenglPractice\src\graphics\rendering\Texture.cpp;D:\C++\Learning\WebOpenglPractice\WebOpeng.d6d4b03c\x64\Debug\Texture.obj

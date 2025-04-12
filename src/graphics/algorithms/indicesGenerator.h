@@ -2,7 +2,7 @@
 #define  INDICES_GENERATOR_H
 #include <vector>
 #include <glm/glm.hpp>
-
+#include "CellData.h"
 
 // Represents the four possible (collision) directions
 
@@ -19,7 +19,7 @@ public:
 
 private:
 	std::vector <uint8_t> indices;
-
+	CellChecker checker;
 
 };
 

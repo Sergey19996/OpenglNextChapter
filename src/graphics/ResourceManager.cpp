@@ -51,10 +51,10 @@ Texture ResourceManager::loadTextureFromFIle(const char* File, bool alpha)
 
 	//load and generate the texture
 	int width, height, nrChannels;
-	unsigned char* data;
-	data = stbi_load(File, &width, &height, &nrChannels, 0);
-	if (data) {
-		texture.Generate(data, height, width);  // тут создалась текстура 
+	unsigned char* flags;
+	flags = stbi_load(File, &width, &height, &nrChannels, 0);
+	if (flags) {
+		texture.Generate(flags, height, width);  // тут создалась текстура 
 
 	}
 	else
@@ -62,7 +62,7 @@ Texture ResourceManager::loadTextureFromFIle(const char* File, bool alpha)
 		std::cout << "ERROR::TEXTURE:failed to load" << std::endl;
 	}
 	//and finaly free image data
-	stbi_image_free(data);
+	stbi_image_free(flags);
 
     return texture;
 }
